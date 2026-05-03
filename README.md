@@ -26,7 +26,6 @@ Le projet est construit avec **React** et **Vite**, une gestion du routage par `
    ```bash
    npm install
    ```
-
 2. Lancez le serveur de développement local :
    ```bash
    npm run dev
@@ -34,5 +33,3 @@ Le projet est construit avec **React** et **Vite**, une gestion du routage par `
 
 3. Rendez-vous sur [http://localhost:5173/](http://localhost:5173/) pour voir l'application.
 
-## Auteurs
-Créé dans le cadre du PFE _(Projet de Fin d'Études)_.
