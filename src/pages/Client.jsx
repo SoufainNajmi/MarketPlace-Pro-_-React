@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const mockProducts = [
+const initialMockProducts = [
   { id: 1, name: 'Produit A', price: 150 },
   { id: 2, name: 'Produit B', price: 300 },
   { id: 3, name: 'Produit C', price: 50 },
   { id: 4, name: 'Produit D', price: 120 },
 ];
 
-const mockSuppliers = [
+const initialMockSuppliers = [
   { id: 1, name: 'Fournisseur Alpha' },
   { id: 2, name: 'Fournisseur Beta' },
   { id: 3, name: 'Fournisseur Gamma' },
@@ -18,14 +18,38 @@ const Client = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  // Lists loaded from localStorage or fallback to standard arrays
+  const [products, setProducts] = useState(() => {
+    const saved = localStorage.getItem('marketplace_products');
+    return saved ? JSON.parse(saved) : initialMockProducts;
+  });
+  
+  const [suppliers, setSuppliers] = useState(() => {
+    const saved = localStorage.getItem('marketplace_suppliers');
+    return saved ? JSON.parse(saved) : initialMockSuppliers;
+  });
+
   // States
-  const [currentView, setCurrentView] = useState('dashboard'); // 'dashboard', 'ordering', 'history', 'invoice'
-  const [ordersHistory, setOrdersHistory] = useState([]);
+  const [currentView, setCurrentView] = useState('dashboard');
+  
+  // Initialize orders history from localStorage
+  const [ordersHistory, setOrdersHistory] = useState(() => {
+    const saved = localStorage.getItem('marketplace_orders');
+    return saved ? JSON.parse(saved) : [];
+  });
   
   // Ordering state
   const [selectedProductIds, setSelectedProductIds] = useState([]);
   const [selectedSupplierId, setSelectedSupplierId] = useState('');
   
+  // Custom items states
+  const [showAddProduct, setShowAddProduct] = useState(false);
+  const [newProductName, setNewProductName] = useState('');
+  const [newProductPrice, setNewProductPrice] = useState('');
+  
+  const [showAddSupplier, setShowAddSupplier] = useState(false);
+  const [newSupplierName, setNewSupplierName] = useState('');
+
   // Invoice state
   const [selectedInvoice, setSelectedInvoice] = useState(null);
 
@@ -49,6 +73,36 @@ const Client = () => {
     );
   };
 
+  const handleAddProduct = () => {
+    if (newProductName && newProductPrice) {
+      const newP = { id: Date.now(), name: newProductName, price: parseFloat(newProductPrice) };
+      const updated = [...products, newP];
+      setProducts(updated);
+      localStorage.setItem('marketplace_products', JSON.stringify(updated));
+      setNewProductName('');
+      setNewProductPrice('');
+      setShowAddProduct(false);
+    } else {
+        alert("Veuillez remplir le nom et le prix du produit.");
+    }
+  };
+
+  const handleAddSupplier = () => {
+    if (newSupplierName) {
+      const newS = { id: Date.now(), name: newSupplierName };
+      const updated = [...suppliers, newS];
+      setSuppliers(updated);
+      localStorage.setItem('marketplace_suppliers', JSON.stringify(updated));
+      setNewSupplierName('');
+      setShowAddSupplier(false);
+      
+      // Auto-select the newly added supplier
+      setSelectedSupplierId(newS.id.toString());
+    } else {
+        alert("Veuillez remplir le nom du fournisseur.");
+    }
+  };
+
   const handleCreateOrder = (e) => {
     e.preventDefault();
     if (selectedProductIds.length === 0) {
@@ -60,8 +114,8 @@ const Client = () => {
       return;
     }
 
-    const selectedProductsData = mockProducts.filter(p => selectedProductIds.includes(p.id));
-    const selectedSupplierData = mockSuppliers.find(s => s.id === parseInt(selectedSupplierId));
+    const selectedProductsData = products.filter(p => selectedProductIds.includes(p.id));
+    const selectedSupplierData = suppliers.find(s => s.id === parseInt(selectedSupplierId));
     
     const total = selectedProductsData.reduce((acc, curr) => acc + curr.price, 0);
 
@@ -70,14 +124,16 @@ const Client = () => {
       date: new Date().toLocaleDateString(),
       supplier: selectedSupplierData,
       products: selectedProductsData,
-      total
+      total,
+      clientEmail: email
     };
 
-    setOrdersHistory([newOrder, ...ordersHistory]);
+    const updatedOrders = [newOrder, ...ordersHistory];
+    setOrdersHistory(updatedOrders);
+    localStorage.setItem('marketplace_orders', JSON.stringify(updatedOrders));
+
     setSelectedProductIds([]);
     setSelectedSupplierId('');
-    
-    // Automatically go to history after placing an order
     setCurrentView('history');
   };
 
@@ -121,9 +177,23 @@ const Client = () => {
         <div style={{ padding: '20px', border: '1px solid #ccc', borderRadius: '5px' }}>
           <h2>Nouvelle Commande</h2>
           <form onSubmit={handleCreateOrder}>
-            <div style={{ marginBottom: '15px' }}>
-              <h3>1. Choisir les produits:</h3>
-              {mockProducts.map(product => (
+            <div style={{ marginBottom: '25px', background: '#fcfcfc', padding: '15px', border: '1px solid #eee' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                <h3 style={{ margin: 0 }}>1. Choisir les produits:</h3>
+                <button type="button" onClick={() => setShowAddProduct(!showAddProduct)} style={{ padding: '5px 10px', background: '#17a2b8', color: 'white', border: 'none', borderRadius: '3px', cursor: 'pointer' }}>
+                  {showAddProduct ? 'Fermer' : '+ Nouveau produit'}
+                </button>
+              </div>
+
+              {showAddProduct && (
+                <div style={{ display: 'flex', gap: '10px', marginBottom: '15px', padding: '10px', border: '1px dashed #17a2b8' }}>
+                  <input type="text" placeholder="Nom du produit" value={newProductName} onChange={e => setNewProductName(e.target.value)} style={{ padding: '8px' }} />
+                  <input type="number" placeholder="Prix" value={newProductPrice} onChange={e => setNewProductPrice(e.target.value)} style={{ padding: '8px', width: '100px' }} />
+                  <button type="button" onClick={handleAddProduct} style={{ padding: '8px 15px', background: '#5cb85c', color: 'white', border: 'none', cursor: 'pointer' }}>Ajouter</button>
+                </div>
+              )}
+
+              {products.map(product => (
                 <div key={product.id} style={{ marginBottom: '5px' }}>
                   <label style={{ cursor: 'pointer' }}>
                     <input 
@@ -138,8 +208,21 @@ const Client = () => {
               ))}
             </div>
 
-            <div style={{ marginBottom: '20px' }}>
-              <h3>2. Choisir le fournisseur:</h3>
+            <div style={{ marginBottom: '25px', background: '#fcfcfc', padding: '15px', border: '1px solid #eee' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                <h3 style={{ margin: 0 }}>2. Choisir le fournisseur:</h3>
+                <button type="button" onClick={() => setShowAddSupplier(!showAddSupplier)} style={{ padding: '5px 10px', background: '#17a2b8', color: 'white', border: 'none', borderRadius: '3px', cursor: 'pointer' }}>
+                  {showAddSupplier ? 'Fermer' : '+ Nouveau fournisseur'}
+                </button>
+              </div>
+
+              {showAddSupplier && (
+                <div style={{ display: 'flex', gap: '10px', marginBottom: '15px', padding: '10px', border: '1px dashed #17a2b8' }}>
+                  <input type="text" placeholder="Nom du fournisseur" value={newSupplierName} onChange={e => setNewSupplierName(e.target.value)} style={{ padding: '8px', flex: 1 }} />
+                  <button type="button" onClick={handleAddSupplier} style={{ padding: '8px 15px', background: '#5cb85c', color: 'white', border: 'none', cursor: 'pointer' }}>Ajouter</button>
+                </div>
+              )}
+
               <select 
                 value={selectedSupplierId} 
                 onChange={(e) => setSelectedSupplierId(e.target.value)}
@@ -147,7 +230,7 @@ const Client = () => {
                 required
               >
                 <option value="">-- Sélectionnez un fournisseur --</option>
-                {mockSuppliers.map(supplier => (
+                {suppliers.map(supplier => (
                   <option key={supplier.id} value={supplier.id}>{supplier.name}</option>
                 ))}
               </select>
@@ -209,6 +292,7 @@ const Client = () => {
           <h2 style={{ borderBottom: '2px solid #ccc', paddingBottom: '10px', marginTop: 0 }}>Facture de la commande {selectedInvoice.id}</h2>
           <p><strong>Date :</strong> {selectedInvoice.date}</p>
           <p><strong>Fournisseur :</strong> {selectedInvoice.supplier.name}</p>
+          <p><strong>Client :</strong> {selectedInvoice.clientEmail}</p>
           
           <h3 style={{ marginTop: '20px' }}>Détails de la facture :</h3>
           <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px' }}>
