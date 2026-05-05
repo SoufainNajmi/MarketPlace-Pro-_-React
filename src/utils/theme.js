@@ -1,24 +1,23 @@
 export const baseThemeOptions = {
-  bgDark: '#1e293b',
-  bgCard: '#ffffff',
-  textMain: '#0f172a',
-  textMuted: '#64748b',
-  border: '#e2e8f0',
-  radius: '12px',
-  shadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05)',
-  shadowHover: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+  bgDark: '#0f172a', // Dark root background
+  bgCard: 'rgba(255, 255, 255, 0.03)', // Glassmorphism cards
+  textMain: '#ffffff', // White text
+  textMuted: '#94a3b8', // Muted white
+  border: 'rgba(255, 255, 255, 0.1)',
+  radius: '16px',
+  shadow: '0 20px 40px -10px rgba(0,0,0,0.5)',
 };
 
 export const clientTheme = {
   ...baseThemeOptions,
-  primary: '#4f46e5',
+  primary: '#4f46e5', // Indigo
   primaryHover: '#4338ca',
   secondary: '#10b981',
 };
 
 export const fournisseurTheme = {
   ...baseThemeOptions,
-  primary: '#10b981',
+  primary: '#10b981', // Emerald
   primaryHover: '#059669',
   secondary: '#4f46e5',
   warning: '#f59e0b',
@@ -27,25 +26,27 @@ export const fournisseurTheme = {
 
 export const getStyles = (theme) => ({
   buttonPrimary: {
-    padding: '10px 20px', background: theme.primary, color: 'white', border: 'none',
-    borderRadius: '8px', fontWeight: '500', cursor: 'pointer', outline: 'none',
-    boxShadow: `0 2px 4px ${theme.primary}33`, fontSize: '14px'
+    padding: '12px 24px', background: `linear-gradient(135deg, ${theme.primary} 0%, ${theme.primaryHover} 100%)`, color: 'white', border: 'none',
+    borderRadius: '12px', fontWeight: '600', cursor: 'pointer', outline: 'none',
+    boxShadow: `0 10px 20px -5px ${theme.primary}80`, fontSize: '14px', transition: 'all 0.2s',
   },
   buttonOutline: {
-    padding: '10px 20px', background: 'transparent', color: theme.primary, border: `1px solid ${theme.border}`,
-    borderRadius: '8px', fontWeight: '500', cursor: 'pointer', fontSize: '14px',
-    backgroundColor: '#f8fafc'
+    padding: '12px 24px', background: 'rgba(255, 255, 255, 0.05)', color: 'white', border: `1px solid ${theme.border}`,
+    borderRadius: '12px', fontWeight: '600', cursor: 'pointer', fontSize: '14px', transition: 'all 0.2s',
+    backdropFilter: 'blur(10px)'
   },
   buttonDanger: {
-    padding: '8px 16px', background: '#ef4444', color: 'white', border: 'none',
-    borderRadius: '8px', fontWeight: '500', cursor: 'pointer', fontSize: '14px'
+    padding: '8px 16px', background: 'rgba(239, 68, 68, 0.2)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.3)',
+    borderRadius: '8px', fontWeight: '600', cursor: 'pointer', fontSize: '14px', transition: 'all 0.2s'
   },
   input: {
-    padding: '12px 16px', borderRadius: '8px', border: `1px solid ${theme.border}`,
-    fontSize: '14px', width: '100%', color: theme.textMain, background: '#f8fafc'
+    padding: '14px 16px', borderRadius: '12px', border: `1px solid ${theme.border}`,
+    fontSize: '14px', width: '100%', color: 'white', background: 'rgba(0, 0, 0, 0.2)',
+    backdropFilter: 'blur(10px)'
   },
   card: {
-    background: theme.bgCard, borderRadius: theme.radius, padding: '24px',
-    boxShadow: theme.shadow, border: `1px solid ${theme.border}`, marginBottom: '24px'
+    background: theme.bgCard, borderRadius: theme.radius, padding: '32px',
+    boxShadow: theme.shadow, border: `1px solid ${theme.border}`, marginBottom: '24px',
+    backdropFilter: 'blur(20px)'
   }
 });
