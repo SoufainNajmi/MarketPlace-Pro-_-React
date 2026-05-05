@@ -7,13 +7,13 @@ const styles = getStyles(theme);
 // --- Subcomponents for clean visual organization ---
 
 const ClientLogin = ({ email, setEmail, password, setPassword, onLogin }) => (
-  <div style={{ display: 'flex', minHeight: '100vh', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f1f5f9' }}>
-    <div className="animate-slide-up" style={{ padding: '40px', width: '100%', maxWidth: '420px', background: 'white', borderRadius: '16px', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}>
+  <div style={{ display: 'flex', minHeight: '100vh', alignItems: 'center', justifyContent: 'center', backgroundColor: 'transparent' }}>
+    <div className="animate-slide-up" style={{ padding: '40px', width: '100%', maxWidth: '420px', background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(20px)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5)' }}>
       <div style={{ textAlign: 'center', marginBottom: '32px' }}>
         <div style={{ width: '48px', height: '48px', background: theme.primary, borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', boxShadow: '0 4px 6px rgba(79, 70, 229, 0.3)' }}>
-          <span style={{ color: 'white', fontSize: '24px', fontWeight: 'bold' }}>M</span>
+          <span style={{ color: 'white', fontSize: '24px', fontWeight: 'bold' }}>H</span>
         </div>
-        <h2 style={{ margin: 0, color: theme.textMain, fontSize: '24px', fontWeight: '700' }}>MarketSpace</h2>
+        <h2 style={{ margin: 0, color: theme.textMain, fontSize: '24px', fontWeight: '700' }}>Client</h2>
         <p style={{ margin: '8px 0 0', color: theme.textMuted, fontSize: '14px' }}>Connectez-vous à votre espace client</p>
       </div>
       <form onSubmit={onLogin} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -46,13 +46,13 @@ const NavItem = ({ view, currentView, setCurrentView, label }) => (
 );
 
 const ClientNavbar = ({ currentView, setCurrentView, onLogout }) => (
-  <nav style={{ background: theme.bgDark, padding: '0 30px', display: 'flex', justifyContent: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', position: 'sticky', top: 0, zIndex: 10 }}>
+  <nav style={{ background: 'rgba(15, 23, 42, 0.8)', backdropFilter: 'blur(20px)', padding: '0 30px', display: 'flex', justifyContent: 'center', borderBottom: `1px solid ${theme.border}`, position: 'sticky', top: 0, zIndex: 50 }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', maxWidth: '1000px', height: '64px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <div style={{ width: '32px', height: '32px', background: theme.primary, borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ color: 'white', fontSize: '16px', fontWeight: 'bold' }}>M</span>
+          <span style={{ color: 'white', fontSize: '16px', fontWeight: 'bold' }}>H</span>
         </div>
-        <h2 style={{ margin: 0, color: 'white', fontSize: '18px', fontWeight: '600', letterSpacing: '-0.5px' }}>MarketSpace</h2>
+        <h2 style={{ margin: 0, color: 'white', fontSize: '18px', fontWeight: '600', letterSpacing: '-0.5px' }}>HANOTI</h2>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
         <NavItem view="dashboard" label="Tableau de bord" currentView={currentView} setCurrentView={setCurrentView} />
@@ -114,7 +114,7 @@ const ProfileView = ({ email }) => (
     </div>
     <div>
       <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: '500', color: theme.textMain }}>Adresse Email Principale</label>
-      <input type="text" readOnly value={email} style={{ ...styles.input, background: '#f1f5f9', cursor: 'not-allowed' }} />
+      <input type="text" readOnly value={email} style={{ ...styles.input, background: 'rgba(0,0,0,0.2)', opacity: 0.7, cursor: 'not-allowed' }} />
     </div>
   </div>
 );
@@ -244,7 +244,7 @@ const Client = () => {
         {currentView === 'dashboard' && <DashboardView email={email} ordersHistory={ordersHistory} setCurrentView={setCurrentView} />}
         {currentView === 'profile' && <ProfileView email={email} />}
         {currentView === 'settings' && <SettingsView />}
-        
+
         {currentView === 'ordering' && (
           <div>
             <h1 style={{ fontSize: '28px', margin: '0 0 24px', color: theme.textMain }}>Nouvelle commande</h1>
@@ -258,7 +258,7 @@ const Client = () => {
                 </div>
 
                 {showAddProduct && (
-                  <div style={{ display: 'flex', gap: '12px', marginBottom: '24px', padding: '16px', background: '#f8fafc', borderRadius: '8px', border: `1px dashed ${theme.primary}` }}>
+                  <div style={{ display: 'flex', gap: '12px', marginBottom: '24px', padding: '16px', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', border: `1px dashed ${theme.primary}` }}>
                     <input type="text" placeholder="Nom du produit..." value={newProductName} onChange={e => setNewProductName(e.target.value)} style={styles.input} />
                     <input type="number" placeholder="Prix" value={newProductPrice} onChange={e => setNewProductPrice(e.target.value)} style={{ ...styles.input, width: '120px' }} />
                     <button type="button" onClick={handleAddProduct} style={styles.buttonPrimary}>Ajouter</button>
@@ -269,7 +269,7 @@ const Client = () => {
                   {products.map(product => {
                     const isSelected = selectedProductIds.includes(product.id);
                     return (
-                      <div key={product.id} onClick={() => handleProductToggle(product.id)} style={{ border: `1px solid ${isSelected ? theme.primary : theme.border}`, borderRadius: '8px', padding: '16px', display: 'flex', alignItems: 'center', backgroundColor: isSelected ? '#eff6ff' : 'white', cursor: 'pointer', transition: 'all 0.2s' }}>
+                      <div key={product.id} onClick={() => handleProductToggle(product.id)} style={{ border: `1px solid ${isSelected ? theme.primary : theme.border}`, borderRadius: '8px', padding: '16px', display: 'flex', alignItems: 'center', backgroundColor: isSelected ? 'rgba(79, 70, 229, 0.2)' : 'rgba(255,255,255,0.03)', cursor: 'pointer', transition: 'all 0.2s', backdropFilter: 'blur(10px)' }}>
                         <div style={{ width: '20px', height: '20px', borderRadius: '4px', border: `2px solid ${isSelected ? theme.primary : '#cbd5e1'}`, background: isSelected ? theme.primary : 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '16px' }}>
                           {isSelected && <span style={{ color: 'white', fontSize: '12px' }}>✓</span>}
                         </div>
@@ -292,7 +292,7 @@ const Client = () => {
                 </div>
 
                 {showAddSupplier && (
-                  <div style={{ display: 'flex', gap: '12px', marginBottom: '24px', padding: '16px', background: '#f8fafc', borderRadius: '8px', border: `1px dashed ${theme.primary}` }}>
+                  <div style={{ display: 'flex', gap: '12px', marginBottom: '24px', padding: '16px', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', border: `1px dashed ${theme.primary}` }}>
                     <input type="text" placeholder="Raison sociale du fournisseur..." value={newSupplierName} onChange={e => setNewSupplierName(e.target.value)} style={styles.input} />
                     <button type="button" onClick={handleAddSupplier} style={styles.buttonPrimary}>Ajouter</button>
                   </div>
@@ -323,7 +323,7 @@ const Client = () => {
             <div style={{ padding: '24px', borderBottom: `1px solid ${theme.border}` }}>
               <h2 style={{ margin: 0, fontSize: '20px' }}>Historique des commandes</h2>
             </div>
-            
+
             {ordersHistory.length === 0 ? (
               <div style={{ padding: '40px', textAlign: 'center', color: theme.textMuted }}>
                 Aucune commande enregistrée.
@@ -331,7 +331,7 @@ const Client = () => {
             ) : (
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
-                  <tr style={{ background: '#f8fafc' }}>
+                  <tr style={{ background: 'rgba(255,255,255,0.05)' }}>
                     <th style={{ padding: '16px 24px', textAlign: 'left', fontSize: '12px', textTransform: 'uppercase', color: theme.textMuted, fontWeight: '600', borderBottom: `1px solid ${theme.border}` }}>N° Ref</th>
                     <th style={{ padding: '16px 24px', textAlign: 'left', fontSize: '12px', textTransform: 'uppercase', color: theme.textMuted, fontWeight: '600', borderBottom: `1px solid ${theme.border}` }}>Date</th>
                     <th style={{ padding: '16px 24px', textAlign: 'left', fontSize: '12px', textTransform: 'uppercase', color: theme.textMuted, fontWeight: '600', borderBottom: `1px solid ${theme.border}` }}>Fournisseur</th>
@@ -345,13 +345,13 @@ const Client = () => {
                       <td style={{ padding: '16px 24px', fontWeight: '500' }}>{order.id}</td>
                       <td style={{ padding: '16px 24px', color: theme.textMuted }}>{order.date}</td>
                       <td style={{ padding: '16px 24px' }}>
-                        <span style={{ display: 'inline-block', background: '#f1f5f9', padding: '4px 8px', borderRadius: '4px', fontSize: '13px' }}>
+                        <span style={{ display: 'inline-block', background: 'rgba(255,255,255,0.05)', border: `1px solid ${theme.border}`, padding: '4px 8px', borderRadius: '8px', fontSize: '13px' }}>
                           {order.supplier.name}
                         </span>
                       </td>
                       <td style={{ padding: '16px 24px', textAlign: 'right', fontWeight: '600', color: theme.textMain }}>{order.total} MAD</td>
                       <td style={{ padding: '16px 24px', textAlign: 'center' }}>
-                        <button onClick={() => { setSelectedInvoice(order); setCurrentView('invoice'); }} style={{ ...styles.buttonOutline, padding: '6px 12px', fontSize: '13px', background: 'white' }}>
+                        <button onClick={() => { setSelectedInvoice(order); setCurrentView('invoice'); }} style={{ ...styles.buttonOutline, padding: '6px 12px', fontSize: '13px', background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)' }}>
                           Visualiser
                         </button>
                       </td>
@@ -370,7 +370,7 @@ const Client = () => {
                 ← Revenir à l'historique
               </button>
             </div>
-            
+
             <div style={{ ...styles.card, padding: '40px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: `1px solid ${theme.border}`, paddingBottom: '32px', marginBottom: '32px' }}>
                 <div>
@@ -380,12 +380,12 @@ const Client = () => {
                 <div style={{ textAlign: 'right' }}>
                   <p style={{ margin: '0 0 4px', color: theme.textMuted, fontSize: '14px' }}>Facturé le</p>
                   <p style={{ margin: '0 0 16px', fontWeight: '500' }}>{selectedInvoice.date}</p>
-                  
+
                   <p style={{ margin: '0 0 4px', color: theme.textMuted, fontSize: '14px' }}>Fournisseur</p>
                   <p style={{ margin: '0', fontWeight: '500' }}>{selectedInvoice.supplier.name}</p>
                 </div>
               </div>
-              
+
               <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '32px' }}>
                 <thead>
                   <tr>
@@ -404,7 +404,7 @@ const Client = () => {
               </table>
 
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <div style={{ width: '300px', background: '#f8fafc', padding: '24px', borderRadius: '8px' }}>
+                <div style={{ width: '300px', background: 'rgba(0,0,0,0.2)', padding: '24px', borderRadius: '8px', border: `1px solid ${theme.border}` }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ color: theme.textMuted, fontWeight: '500' }}>Total TTC</span>
                     <span style={{ fontSize: '24px', fontWeight: 'bold', color: theme.primary }}>{selectedInvoice.total.toFixed(2)} MAD</span>
@@ -412,7 +412,7 @@ const Client = () => {
                 </div>
               </div>
             </div>
-            
+
             <div style={{ textAlign: 'center', marginTop: '24px' }}>
               <button style={styles.buttonPrimary} onClick={() => window.print()}>
                 🖨️ Imprimer la facture
