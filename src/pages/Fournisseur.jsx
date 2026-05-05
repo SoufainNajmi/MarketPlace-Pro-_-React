@@ -6,13 +6,13 @@ const styles = getStyles(theme);
 // --- Subcomponents for clean visual organization ---
 
 const FournisseurLogin = ({ email, setEmail, password, setPassword, onLogin }) => (
-  <div style={{ display: 'flex', minHeight: '100vh', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f1f5f9' }}>
-    <div className="animate-slide-up" style={{ padding: '40px', width: '100%', maxWidth: '420px', background: 'white', borderRadius: '16px', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}>
+  <div style={{ display: 'flex', minHeight: '100vh', alignItems: 'center', justifyContent: 'center', backgroundColor: 'transparent' }}>
+    <div className="animate-slide-up" style={{ padding: '40px', width: '100%', maxWidth: '420px', background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(20px)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5)' }}>
       <div style={{ textAlign: 'center', marginBottom: '32px' }}>
         <div style={{ width: '48px', height: '48px', background: theme.primary, borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', boxShadow: '0 4px 6px rgba(16, 185, 129, 0.3)' }}>
-          <span style={{ color: 'white', fontSize: '24px', fontWeight: 'bold' }}>F</span>
+          <span style={{ color: 'white', fontSize: '24px', fontWeight: 'bold' }}>H</span>
         </div>
-        <h2 style={{ margin: 0, color: theme.textMain, fontSize: '24px', fontWeight: '700' }}>Portail Fournisseur</h2>
+        <h2 style={{ margin: 0, color: theme.textMain, fontSize: '24px', fontWeight: '700' }}>Fournisseur</h2>
         <p style={{ margin: '8px 0 0', color: theme.textMuted, fontSize: '14px' }}>Gérez vos commandes et clients</p>
       </div>
       <form onSubmit={onLogin} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -50,7 +50,7 @@ const NavItem = ({ view, label, count = 0, currentView, setCurrentView, setSelec
 );
 
 const FournisseurNavbar = ({ currentView, setCurrentView, setSelectedInvoice, pendingCount, onLogout }) => (
-  <nav style={{ background: theme.bgDark, padding: '0 30px', display: 'flex', justifyContent: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', position: 'sticky', top: 0, zIndex: 10 }}>
+  <nav style={{ background: 'rgba(15, 23, 42, 0.8)', backdropFilter: 'blur(20px)', padding: '0 30px', display: 'flex', justifyContent: 'center', borderBottom: `1px solid ${theme.border}`, position: 'sticky', top: 0, zIndex: 50 }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', maxWidth: '1000px', height: '64px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <div style={{ width: '32px', height: '32px', background: theme.primary, borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -106,7 +106,7 @@ const Fournisseur = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
+
   const [currentView, setCurrentView] = useState('dashboard');
   const [receivedOrders, setReceivedOrders] = useState([]);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
@@ -136,7 +136,7 @@ const Fournisseur = () => {
     setEmail('');
     setPassword('');
   };
-  
+
   const updateOrderStatus = (orderId, newStatus) => {
     const updated = receivedOrders.map(o => o.id === orderId ? { ...o, status: newStatus } : o);
     setReceivedOrders(updated);
@@ -145,7 +145,7 @@ const Fournisseur = () => {
       setSelectedInvoice({ ...selectedInvoice, status: newStatus });
     }
   };
-  
+
   const totalCA = receivedOrders.reduce((acc, curr) => curr.status === 'Validée' ? acc + curr.total : acc, 0);
   const pendingCount = receivedOrders.filter(o => !o.status || o.status === 'En attente').length;
 
@@ -159,7 +159,7 @@ const Fournisseur = () => {
 
       <main className="animate-slide-up" style={{ flex: 1, padding: '40px 20px', width: '100%', maxWidth: '1000px', margin: '0 auto' }}>
         {currentView === 'dashboard' && <DashboardView receivedOrders={receivedOrders} pendingCount={pendingCount} totalCA={totalCA} setCurrentView={setCurrentView} />}
-        
+
         {currentView === 'profile' && (
           <div style={styles.card}>
             <h2 style={{ margin: '0 0 20px', fontSize: '20px', borderBottom: `1px solid ${theme.border}`, paddingBottom: '16px' }}>Profil Fournisseur</h2>
@@ -174,7 +174,7 @@ const Fournisseur = () => {
             </div>
             <div>
               <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: '500', color: theme.textMain }}>Email Contact Principal</label>
-              <input type="text" readOnly value={email} style={{ ...styles.input, background: '#f1f5f9', cursor: 'not-allowed' }} />
+              <input type="text" readOnly value={email} style={{ ...styles.input, background: 'rgba(0,0,0,0.2)', opacity: 0.7, cursor: 'not-allowed' }} />
             </div>
           </div>
         )}
@@ -190,11 +190,11 @@ const Fournisseur = () => {
           <div style={{ ...styles.card, padding: 0, overflow: 'hidden' }}>
             <div style={{ padding: '24px', borderBottom: `1px solid ${theme.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h2 style={{ margin: 0, fontSize: '20px' }}>Liste des Commandes Entrantes</h2>
-              <span style={{ fontSize: '14px', color: theme.textMuted, background: '#f8fafc', padding: '6px 12px', borderRadius: '20px', border: `1px solid ${theme.border}` }}>
+              <span style={{ fontSize: '14px', color: theme.textMuted, background: 'rgba(0,0,0,0.2)', padding: '6px 12px', borderRadius: '20px', border: `1px solid ${theme.border}` }}>
                 Mise à jour en temps réel (Sync)
               </span>
             </div>
-            
+
             {receivedOrders.length === 0 ? (
               <div style={{ padding: '40px', textAlign: 'center', color: theme.textMuted }}>
                 Aucune commande reçue de la part des clients.
@@ -202,7 +202,7 @@ const Fournisseur = () => {
             ) : (
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
-                  <tr style={{ background: '#f8fafc' }}>
+                  <tr style={{ background: 'rgba(255,255,255,0.05)' }}>
                     <th style={{ padding: '16px 24px', textAlign: 'left', fontSize: '12px', textTransform: 'uppercase', color: theme.textMuted, fontWeight: '600', borderBottom: `1px solid ${theme.border}` }}>N° Cmd</th>
                     <th style={{ padding: '16px 24px', textAlign: 'left', fontSize: '12px', textTransform: 'uppercase', color: theme.textMuted, fontWeight: '600', borderBottom: `1px solid ${theme.border}` }}>Date</th>
                     <th style={{ padding: '16px 24px', textAlign: 'left', fontSize: '12px', textTransform: 'uppercase', color: theme.textMuted, fontWeight: '600', borderBottom: `1px solid ${theme.border}` }}>Client (Email)</th>
@@ -215,18 +215,18 @@ const Fournisseur = () => {
                   {receivedOrders.map((order, index) => {
                     const isPending = !order.status || order.status === 'En attente';
                     return (
-                      <tr key={order.id} style={{ borderBottom: index === receivedOrders.length - 1 ? 'none' : `1px solid ${theme.border}`, background: isPending ? '#fefce8' : 'white' }}>
+                      <tr key={order.id} style={{ borderBottom: index === receivedOrders.length - 1 ? 'none' : `1px solid ${theme.border}`, background: isPending ? 'rgba(245, 158, 11, 0.1)' : 'transparent', transition: 'all 0.2s' }}>
                         <td style={{ padding: '16px 24px', fontWeight: '500' }}>{order.id}</td>
                         <td style={{ padding: '16px 24px', color: theme.textMuted, fontSize: '14px' }}>{order.date}</td>
                         <td style={{ padding: '16px 24px', fontSize: '14px' }}>{order.clientEmail}</td>
                         <td style={{ padding: '16px 24px', textAlign: 'right', fontWeight: '600', color: theme.textMain }}>{order.total} MAD</td>
                         <td style={{ padding: '16px 24px', textAlign: 'center' }}>
-                          <span style={{ display: 'inline-block', background: isPending ? '#fef3c7' : '#dcfce7', color: isPending ? '#b45309' : '#15803d', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold' }}>
+                          <span style={{ display: 'inline-block', background: isPending ? 'rgba(245, 158, 11, 0.2)' : 'rgba(16, 185, 129, 0.2)', color: isPending ? '#fbbf24' : '#34d399', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold' }}>
                             {order.status || 'En attente'}
                           </span>
                         </td>
                         <td style={{ padding: '16px 24px', textAlign: 'center' }}>
-                          <button onClick={() => { setSelectedInvoice(order); setCurrentView('invoice'); }} style={{ ...styles.buttonOutline, padding: '6px 12px', fontSize: '13px', background: 'white' }}>
+                          <button onClick={() => { setSelectedInvoice(order); setCurrentView('invoice'); }} style={{ ...styles.buttonOutline, padding: '6px 12px', fontSize: '13px', background: 'rgba(255,255,255,0.05)' }}>
                             Traiter / Facture
                           </button>
                         </td>
@@ -246,7 +246,7 @@ const Fournisseur = () => {
                 ← Retour au registre des commandes
               </button>
             </div>
-            
+
             <div style={{ ...styles.card, padding: '40px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: `1px solid ${theme.border}`, paddingBottom: '32px', marginBottom: '32px' }}>
                 <div>
@@ -254,7 +254,7 @@ const Fournisseur = () => {
                   <p style={{ margin: 0, color: theme.textMuted }}>Ref Interne: <strong style={{ color: theme.textMain }}>{selectedInvoice.id}</strong></p>
                   <p style={{ marginTop: '12px', fontSize: '14px' }}>
                     Statut:
-                    <span style={{ marginLeft: '8px', padding: '4px 8px', borderRadius: '4px', background: selectedInvoice.status === 'Validée' ? '#dcfce7' : '#fef3c7', color: selectedInvoice.status === 'Validée' ? '#15803d' : '#b45309', fontWeight: 'bold' }}>
+                    <span style={{ marginLeft: '8px', padding: '4px 8px', borderRadius: '4px', background: selectedInvoice.status === 'Validée' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)', color: selectedInvoice.status === 'Validée' ? '#34d399' : '#fbbf24', fontWeight: 'bold' }}>
                       {selectedInvoice.status || 'En attente'}
                     </span>
                   </p>
@@ -266,7 +266,7 @@ const Fournisseur = () => {
                   <p style={{ margin: '0', fontWeight: '500' }}>{selectedInvoice.clientEmail}</p>
                 </div>
               </div>
-              
+
               <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '32px' }}>
                 <thead>
                   <tr>
@@ -285,7 +285,7 @@ const Fournisseur = () => {
               </table>
 
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <div style={{ width: '300px', background: '#f8fafc', padding: '24px', borderRadius: '8px' }}>
+                <div style={{ width: '300px', background: 'rgba(0,0,0,0.2)', padding: '24px', borderRadius: '8px', border: `1px solid ${theme.border}` }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ color: theme.textMuted, fontWeight: '500' }}>Sous-total HT</span>
                     <span style={{ fontSize: '16px', fontWeight: 'bold' }}>{(selectedInvoice.total * 0.8).toFixed(2)}</span>
@@ -301,7 +301,7 @@ const Fournisseur = () => {
                 </div>
               </div>
             </div>
-            
+
             <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '24px' }}>
               {(!selectedInvoice.status || selectedInvoice.status === 'En attente') && (
                 <button style={styles.buttonPrimary} onClick={() => updateOrderStatus(selectedInvoice.id, 'Validée')}>
